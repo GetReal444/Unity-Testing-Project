@@ -1,2 +1,2 @@
-# Unity-Testing-Project
+# Unity-Project
 Unity experimenting stuff
