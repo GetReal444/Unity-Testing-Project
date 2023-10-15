@@ -22,7 +22,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Crouching")]
     [SerializeField] private float crouchSpeed;
-    [SerializeField] private float crouchYScacle;
+    [SerializeField] private float crouchYScale;
     [SerializeField] private float startYScale;
 
     [Header("Keybinds")]
@@ -32,6 +32,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
+    [Rename("Ground Layer")]
     [SerializeField] private LayerMask whatIsGround;
     bool grounded;
 
@@ -114,7 +115,7 @@ public class PlayerMove : MonoBehaviour
         //crouch logic
         if (Input.GetKeyDown(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScacle, transform.localScale.z);
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         }
 
