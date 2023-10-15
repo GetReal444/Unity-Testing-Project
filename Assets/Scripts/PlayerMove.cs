@@ -8,12 +8,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float groundDrag;
 
-    [SerializeField] private float desiredSpeed;
-    [SerializeField] private float lastDesiredSpeed;
-
     [SerializeField] private float walkSpeed;
     [SerializeField] private float sprintSpeed;
-    [SerializeField] private float slideSpeed;
 
     [SerializeField] private float speedIncreaseMultiplier;
     [SerializeField] private float slopeIncreaseMultiplier;
@@ -63,11 +59,9 @@ public class PlayerMove : MonoBehaviour
         walking,
         sprinting,
         crouching,
-        sliding,
         air
     }
 
-    public bool sliding;
     public bool crouching;
 
     private void Start()
@@ -118,38 +112,22 @@ public class PlayerMove : MonoBehaviour
         }
 
         //crouch logic
-        if (Input.GetKeyDown(crouchKey) && horizontalInput == 0 && verticalInput == 0)
+        if (Input.GetKeyDown(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScacle, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-
-            crouching = true;
         }
 
         if (Input.GetKeyUp(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-
-            crouching = false;
         }
     }
 
     private void StateHandler()
     {
-        //Mode - sliding
-        if (sliding)
-        {
-            state = MovementState.sliding;
-
-            //increase speed by one every second
-            if (OnSlope() && rb.velocity.y < 0.1f)
-                desiredSpeed = slideSpeed;
-            else
-                desiredSpeed = sprintSpeed;
-        }
-
         //Mode - crouching
-        else if (crouching)
+        if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
             moveSpeed = crouchSpeed;
@@ -174,47 +152,6 @@ public class PlayerMove : MonoBehaviour
         {
             state = MovementState.air;
         }
-
-        //check if desired move speed has changed drastically
-        if (Mathf.Abs(desiredSpeed - lastDesiredSpeed) > 4f && moveSpeed != 0)
-        {
-            StopAllCoroutines();
-            StartCoroutine(SmoothlyLerpMoveSpeed());
-
-            print("Lerp Started");
-        }
-        else
-        {
-            moveSpeed = desiredSpeed;
-        }
-        lastDesiredSpeed = desiredSpeed;
-    }
-
-    private IEnumerator SmoothlyLerpMoveSpeed()
-    {
-        //smoothly lerp move speed to desired value
-        float time = 0;
-        float difference = Mathf.Abs(desiredSpeed - moveSpeed);
-        float startValue = moveSpeed;
-
-        while (time < difference)
-        {
-            moveSpeed = Mathf.Lerp(startValue, desiredSpeed, time / difference);
-
-            if (OnSlope())
-            {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-            }
-            else
-                time += Time.deltaTime * speedIncreaseMultiplier;
-            yield return null;
-        }
-
-        desiredSpeed = walkSpeed;
-        moveSpeed = desiredSpeed;
     }
 
     private void MovePlayer()

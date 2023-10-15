@@ -181,6 +181,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 645306492}
+  - {fileID: 732700567}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &305769157
@@ -762,7 +763,7 @@ RectTransform:
   m_Children:
   - {fileID: 482406460}
   - {fileID: 352224474}
-  m_Father: {fileID: 2143914866}
+  m_Father: {fileID: 305769156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1276,7 +1277,6 @@ GameObject:
   - component: {fileID: 2143914866}
   - component: {fileID: 2143914867}
   - component: {fileID: 2143914868}
-  - component: {fileID: 2143914869}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1300,7 +1300,6 @@ Transform:
   - {fileID: 1352679232}
   - {fileID: 261157821}
   - {fileID: 1079692104}
-  - {fileID: 732700567}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2143914867
@@ -1344,11 +1343,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   groundDrag: 5
-  desiredSpeed: 7
-  lastDesiredSpeed: 0
   walkSpeed: 7
   sprintSpeed: 12
-  slideSpeed: 14
   speedIncreaseMultiplier: 2
   slopeIncreaseMultiplier: 2
   jumpForce: 12
@@ -1369,26 +1365,7 @@ MonoBehaviour:
   state: 0
   t_speed: {fileID: 482406461}
   t_mode: {fileID: 352224475}
-  sliding: 0
   crouching: 0
---- !u!114 &2143914869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2143914865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1f6e6ab38bdba44cbf2ad1e72c2eca9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orientation: {fileID: 261157821}
-  playerObj: {fileID: 2143914866}
-  maxSlideTime: 0.6
-  slideForce: 200
-  slideYScale: 0.5
-  slideKey: 306
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
