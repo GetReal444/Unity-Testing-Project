@@ -55,6 +55,8 @@ public class PlayerMove : MonoBehaviour
     public TextMeshProUGUI t_speed;
     public TextMeshProUGUI t_mode;
 
+    public float a;
+
     public enum MovementState
     {
         walking,
@@ -175,7 +177,7 @@ public class PlayerMove : MonoBehaviour
 
         //in air
         else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * a * airMultiplier, ForceMode.Force);
 
         //turn off gravity while on slope
         rb.useGravity = !OnSlope();
