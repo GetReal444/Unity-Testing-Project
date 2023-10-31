@@ -18,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpCooldown;
     [SerializeField] private float airMultiplier;
+    [SerializeField]private float airVelocityHandling;
     bool readyToJump;
 
     [Header("Crouching")]
@@ -54,8 +55,6 @@ public class PlayerMove : MonoBehaviour
 
     public TextMeshProUGUI t_speed;
     public TextMeshProUGUI t_mode;
-
-    public float a;
 
     public enum MovementState
     {
@@ -139,8 +138,8 @@ public class PlayerMove : MonoBehaviour
         //Mode - sprinting
         else if (grounded && Input.GetKey(sprintKey))
         {
-            state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
+            state = MovementState.sprinting;
         }
 
         //Mode - walking
@@ -168,7 +167,13 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(GetSlopeMovementDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
 
             if (rb.velocity.y > 0)
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            {
+                rb.AddForce(Vector3.down * 115f, ForceMode.Force);
+                if(state == MovementState.sprinting)
+                {
+                    moveSpeed = sprintSpeed / 1.5f;
+                }
+            } 
         }
 
         //on ground
@@ -176,11 +181,23 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         //in air
-        else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * a * airMultiplier, ForceMode.Force);
+        if (rb != null && moveDirection != null && !grounded)
+        {
+            if (!Input.GetKey(sprintKey))
+            {
+                rb.AddForce(moveDirection.normalized * moveSpeed * airVelocityHandling * airMultiplier, ForceMode.Force);
+                Debug.Log("No Sprint Key Pressed");
+            }
 
-        //turn off gravity while on slope
-        rb.useGravity = !OnSlope();
+            else if (Input.GetKey(sprintKey))
+            {
+                rb.AddForce(moveDirection.normalized * moveSpeed * (airVelocityHandling * 2) * airMultiplier, ForceMode.Force);
+                Debug.Log("Sprint Key Pressed");
+            }
+        }
+
+            //turn off gravity while on slope
+            rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
