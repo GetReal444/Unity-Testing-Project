@@ -64,8 +64,6 @@ public class PlayerMove : MonoBehaviour
         air
     }
 
-    public bool crouching;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -164,11 +162,14 @@ public class PlayerMove : MonoBehaviour
         //on slope
         if(OnSlope() && !exitingSlope)
         {
+            //increases movement speed on slope
             rb.AddForce(GetSlopeMovementDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
 
             if (rb.velocity.y > 0)
             {
+                //slows down the player while going up the slope
                 rb.AddForce(Vector3.down * 115f, ForceMode.Force);
+
                 if(state == MovementState.sprinting)
                 {
                     moveSpeed = sprintSpeed / 1.5f;
@@ -181,8 +182,9 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         //in air
-        if (rb != null && moveDirection != null && !grounded)
+        if (rb != null && moveDirection != null && !grounded) //rb and moveDirection were added to prevent errors
         {
+            //slows player movement in air
             if (!Input.GetKey(sprintKey))
             {
                 rb.AddForce(moveDirection.normalized * moveSpeed * airVelocityHandling * airMultiplier, ForceMode.Force);
@@ -202,7 +204,7 @@ public class PlayerMove : MonoBehaviour
 
     private void SpeedControl()
     {
-        //limiting speed on slope
+        //preventing player's speed to be different on slope
         if(OnSlope() && !exitingSlope)
         {
             if(rb.velocity.magnitude > moveSpeed)
@@ -227,8 +229,7 @@ public class PlayerMove : MonoBehaviour
     {
         exitingSlope = true;
 
-        //reset y velocity
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); //reset y velocity to prevent differences in jump height
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
@@ -245,12 +246,13 @@ public class PlayerMove : MonoBehaviour
         if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.9f + 0.2f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            return angle < maxSlopeAngle && angle != 0; //adds ability to make player walk on slope before certain angle
         }
 
         return false;
     }
 
+    //gets slope move direction
     public Vector3 GetSlopeMovementDirection(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
@@ -267,6 +269,7 @@ public class PlayerMove : MonoBehaviour
         t_mode.SetText(state.ToString());
     }
 
+    //rounds the number
     public static float Round(float value, int digits)
     {
         float mult = Mathf.Pow(10f, (float)digits);

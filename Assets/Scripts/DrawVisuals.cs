@@ -14,10 +14,10 @@ public class DrawVisuals : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
 
-        Vector3 center = transform.position + cc.center;
-        Vector3 rectangle = new Vector3(1f, 2.55f, 1f);
+        Vector3 center = transform.position + cc.center; //makes center of visual in center
+        Vector3 rectangle = new Vector3(1f, 2.55f, 1f); //sets cubes dimensions
 
-        Gizmos.DrawWireCube(center, rectangle);
+        Gizmos.DrawWireCube(center, rectangle); //Draws a cube (rectangle)
     }
 }
 
